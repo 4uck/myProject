@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId()==R.id.report){
             SparseBooleanArray sbArray = lvMain.getCheckedItemPositions();
             JSONArray ja = new JSONArray();
-            ja.put("my desk");
+            ja.put(room);
 
             for (int i = 0; i < sbArray.size(); i++) {
                 int key = sbArray.keyAt(i);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void getList() {
 
         String myURL = "http://192.168.1.40/getList.php";
-        String params = "content=" + "my desk";
+        String params = "content=" + room;
         byte[] data1 = null;
         InputStream is = null;
 
