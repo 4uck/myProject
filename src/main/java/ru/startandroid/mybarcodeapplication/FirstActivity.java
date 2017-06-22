@@ -20,7 +20,7 @@ import java.net.URL;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String[] list;
+    String[] listName, listId;
     Button btnSelect;
     Spinner spinner;
 
@@ -35,7 +35,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         getRoom();
 
         // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listName);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -52,7 +52,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.btnSelect){
 //            Toast.makeText(this, "Kabinet : " + spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("room" ,spinner.getSelectedItem().toString());
+            intent.putExtra("room" ,listId[spinner.getSelectedItemPosition()]);
             startActivity(intent);
         }
 
@@ -109,18 +109,19 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             Integer i = 0;
 
             StringBuilder sb2 = new StringBuilder();
-            list = new String[ja.length()];
+            listName = new String[ja.length()];
+            listId = new String[ja.length()];
 
             while (i < ja.length()) {
 
                 // разберем JSON массив построчно
                 jo = ja.getJSONObject(i);
-                list[i] = jo.getString("name");
+                listName[i] = jo.getString("name");
+                listId[i] = jo.getString("id");
                 i++;
             }
 
         }catch (Exception e){
-
         }
     }
 }
