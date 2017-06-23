@@ -136,13 +136,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             contentTxt.setText("CONTENT: " + scanContent);
 
             String nameItem = map.get(scanContent);
-            int i = 0;
+            if (nameItem != null) {
+                int i = 0;
 
-            while (!names[i].equals(nameItem)){
-                i++;
-            };
+                while (!names[i].equals(nameItem)) {
+                    i++;
+                }
+                ;
 
-            lvMain.performItemClick(lvMain.getAdapter().getView(i, null, null), i, lvMain.getAdapter().getItemId(i));
+                lvMain.performItemClick(lvMain.getAdapter().getView(i, null, null), i, lvMain.getAdapter().getItemId(i));
+            }else {
+                Toast.makeText(getApplicationContext(), "Данная позиция отсутствует в базе", Toast.LENGTH_SHORT).show();
+            }
 
         }else{
             Toast toast = Toast.makeText(getApplicationContext(),
