@@ -1,5 +1,7 @@
 package ru.startandroid.mybarcodeapplication;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,18 +34,36 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         btnSelect = (Button)findViewById(R.id.btnSelect);
         btnSelect.setOnClickListener(this);
 
-        getRoom();
+        try {
+            getRoom();
 
-        // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listName);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // адаптер
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listName);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(adapter);
-        // заголовок
-        spinner.setPrompt("Кабинеты");
-        // выделяем элемент
+            spinner = (Spinner) findViewById(R.id.spinner);
+            spinner.setAdapter(adapter);
+            // заголовок
+            spinner.setPrompt("Кабинеты");
+            // выделяем элемент
 //        spinner.setSelection(2);
+        }catch (Exception e) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error")
+                    .setMessage("Не удалось подключиться к серверу, приложение будет закрыто")
+                    .setCancelable(false)
+                    .setNegativeButton("ОК",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    System.exit(0);
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
     }
 
     @Override
@@ -58,14 +78,13 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    void getRoom(){
+    void getRoom() throws Exception {
 
         String myURL = "http://192.168.1.40/getRoom.php";
         String params = "content=" + "my desk";
         byte[] data1 = null;
         InputStream is = null;
 
-        try {
             URL url = new URL(myURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -120,8 +139,5 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 listId[i] = jo.getString("id");
                 i++;
             }
-
-        }catch (Exception e){
-        }
     }
 }
