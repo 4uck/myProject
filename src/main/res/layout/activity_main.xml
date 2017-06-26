@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="GetReport"
+            android:text="@string/GetReport"
             android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:id="@+id/report" />

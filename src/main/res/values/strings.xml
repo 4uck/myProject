@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MyBarcodeApplication</string>
-    <string name="scan">Scan</string>
+    <string name="scan">Сканировать</string>
+    <string name="GetReport">Сформировать Отчет</string>
 </resources>
