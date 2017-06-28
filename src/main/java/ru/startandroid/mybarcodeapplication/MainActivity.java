@@ -53,7 +53,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         scanBtn.setOnClickListener(this);
         report.setOnClickListener(this);
 
-        getList();
+        getList getList = new getList();
+        getList.start();
+        try {
+            getList.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -63,64 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             scanIntegrator.initiateScan();
         }
         if (v.getId()==R.id.report){
-            SparseBooleanArray sbArray = lvMain.getCheckedItemPositions();
-            JSONArray ja = new JSONArray();
-            ja.put(room);
-
-            for (int i = 0; i < sbArray.size(); i++) {
-                int key = sbArray.keyAt(i);
-                if (sbArray.get(key)){
-                    ja.put(codes[key]);
-                }
+            getReport getReport = new getReport();
+            getReport.start();
+            try {
+                getReport.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-                String myURL = "http://192.168.1.40/excel.php";
-                String params = "json=" + ja.toString();
-                byte[] data1 = null;
-                InputStream is = null;
-
-                try {
-                    URL url = new URL(myURL);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-
-                    conn.setRequestMethod("POST");
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
-                    conn.setConnectTimeout(8000);
-
-                    conn.setRequestProperty("Content-Length", "" + Integer.toString(params.getBytes().length));
-                    OutputStream os = conn.getOutputStream();
-                    data1 = params.getBytes();
-                    os.write(data1);
-                    data1 = null;
-
-
-                    conn.connect();
-
-                    InputStream inputStream = conn.getInputStream();
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(inputStream, "UTF-8"));
-                    StringBuilder sb = new StringBuilder();
-
-                    String bfr_st = null;
-                    while ((bfr_st = br.readLine()) != null) {
-                        sb.append(bfr_st);
-                    }
-
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            sb.toString(), Toast.LENGTH_SHORT);
-                    toast.show();
-
-
-                    inputStream.close();
-                    br.close();
-                    conn.disconnect();
-
-                }catch (Exception e) {
-
-                }
-
         }
     }
 
@@ -153,6 +108,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No scan data received!", Toast.LENGTH_SHORT);
             toast.show();
+        }
+    }
+
+    class getReport extends Thread{
+        @Override
+        public void run() {
+            getReport();
+        }
+    }
+
+    class getList extends Thread{
+        @Override
+        public void run() {
+            getList();
+        }
+    }
+
+    void getReport(){
+        SparseBooleanArray sbArray = lvMain.getCheckedItemPositions();
+        JSONArray ja = new JSONArray();
+        ja.put(room);
+
+        for (int i = 0; i < sbArray.size(); i++) {
+            int key = sbArray.keyAt(i);
+            if (sbArray.get(key)){
+                ja.put(codes[key]);
+            }
+        }
+
+        String myURL = "http://192.168.1.40/excel.php";
+        String params = "json=" + ja.toString();
+        byte[] data1 = null;
+        InputStream is = null;
+
+        try {
+            URL url = new URL(myURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(8000);
+
+            conn.setRequestProperty("Content-Length", "" + Integer.toString(params.getBytes().length));
+            OutputStream os = conn.getOutputStream();
+            data1 = params.getBytes();
+            os.write(data1);
+            data1 = null;
+
+
+            conn.connect();
+
+            InputStream inputStream = conn.getInputStream();
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(inputStream, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+
+            String bfr_st = null;
+            while ((bfr_st = br.readLine()) != null) {
+                sb.append(bfr_st);
+            }
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    sb.toString(), Toast.LENGTH_SHORT);
+            toast.show();
+
+
+            inputStream.close();
+            br.close();
+            conn.disconnect();
+
+        }catch (Exception e) {
+
         }
     }
 
